@@ -1,30 +1,32 @@
 import ToyCard from "./ToyCard"
 import db from "./db.json"
 import React, {Component} from 'react'
+import ToyForm from './ToyForm'
 
  class ToysContainer extends Component {
-     constructor(props) {
-         super(props)
-         this.state = {
-             toys: [],
-             searchTerm: ""
-         }
-     }
+    // constructor(props) {
+    //     super(props)
+    //     this.state = {
+    //         toys: [],
+    //         searchTerm: ""
+    //     }
+    //     this.handleChange = this.handleChange.bind(this)
+    //  }
+    state = {
+        toys: [],
+        searchTerm: ""
+    }
 
      componentDidMount() {
         fetch("http://localhost:3000/toys")
         .then(resp => resp.json())
         .then(json => {
             this.setState({toys: json})
-            // this.setState((state, props) => {
+            // this.setState((prevState, prevProps) => {
             //     return {toys: json}
             // })
         })
      }
-     // alternative version
-    // state = {
-    //     toys: []
-    // }
 
     makeToyCards() {
         let toys = this.state.toys
@@ -38,6 +40,12 @@ import React, {Component} from 'react'
         e.preventDefault()
         this.setState({searchTerm: e.target.value})
     }
+    
+    handleCreate = (toyJson) => {
+        this.setState({
+            toys: [...this.state.toys, toyJson]
+        })
+    }
 
     render() {
 
@@ -47,6 +55,7 @@ import React, {Component} from 'react'
                 <div>
                     <input type="text" onChange={this.handleChange} placeholder="Search for a toy..." />
                 </div>
+                <ToyForm handleCreate={this.handleCreate} />
                 {this.makeToyCards()}
             </div>
         )
